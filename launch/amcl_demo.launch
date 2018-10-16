@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<launch>
+      
+  
+    <!-- Define laser type-->
+      
+  
+    <arg default="rplidar" name="laser_type"/>
+      
+  
+    <!-- laser driver -->
+      
+  
+    <include file="$(find turtlebot_navigation)/laser/driver/$(arg laser_type)_laser.launch"/>
+      
+  
+    <!-- Map server -->
+      
+  
+    <arg default="$(env TURTLEBOT_MAP_FILE)" name="map_file"/>
+      
+  
+    <node args="$(arg map_file)" name="map_server" pkg="map_server" type="map_server"/>
+      
+  
+    <!-- AMCL -->
+      
+  
+    <arg default="$(find turtlebot_navigation)/launch/includes/amcl/$(arg laser_type)_amcl.launch.xml" name="custom_amcl_launch_file"/>
+      
+  
+    <arg default="0.0" name="initial_pose_x"/>
+    <!-- Use 17.0 for willow's map in simulation -->
+      
+  
+    <arg default="0.0" name="initial_pose_y"/>
+    <!-- Use 17.0 for willow's map in simulation -->
+      
+  
+    <arg default="0.0" name="initial_pose_a"/>
+      
+  
+    <include file="$(arg custom_amcl_launch_file)">
+            
+    
+        <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
+            
+    
+        <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
+            
+    
+        <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
+          
+  
+    </include>
+      
+  
+    <!-- Move base -->
+      
+  
+    <arg default="$(find turtlebot_navigation)/param/$(arg laser_type)_costmap_params.yaml" name="custom_param_file"/>
+      
+  
+    <include file="$(find turtlebot_navigation)/launch/includes/rplidar_move_base.launch.xml">
+            
+    
+        <arg name="custom_param_file" value="$(arg custom_param_file)"/>
+          
+  
+    </include>
+</launch>

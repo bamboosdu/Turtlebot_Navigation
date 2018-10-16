@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find turtlebot_navigation)/launch/includes/velocity_smoother.launch.xml"/>
+    <include file="$(find turtlebot_navigation)/launch/includes/safety_controller.launch.xml"/>
+    <arg default="odom" name="odom_frame_id"/>
+    <arg default="base_footprint" name="base_frame_id"/>
+    <arg default="map" name="global_frame_id"/>
+    <arg default="odom" name="odom_topic"/>
+    <arg default="scan" name="laser_topic"/>
+    <arg default="$(find turtlebot_navigation)/param/dummy.yaml" name="custom_param_file"/>
+    <node name="move_base" output="screen" pkg="move_base" respawn="false" type="move_base">
+        <rosparam command="load" file="$(find turtlebot_navigation)/param/config/odom/costmap_common_params.yaml" ns="global_costmap"/>
+        <rosparam command="load" file="$(find turtlebot_navigation)/param/config/odom/costmap_common_params.yaml" ns="local_costmap"/>
+        <rosparam command="load" file="$(find turtlebot_navigation)/param/config/odom/global_costmap_params.yaml"/>
+        <rosparam command="load" file="$(find turtlebot_navigation)/param/config/odom/base_local_planner_params.yaml"/>
+        <rosparam command="load" file="$(find turtlebot_navigation)/param/config/odom/local_costmap_params.yaml"/>
+        <rosparam command="load" file="$(find turtlebot_navigation)/param/config/nav_obstacles_params.yaml"/>
+        <param name="global_costmap/global_frame" value="$(arg global_frame_id)"/>
+        <param name="global_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
+        <param name="local_costmap/global_frame" value="$(arg odom_frame_id)"/>
+        <param name="local_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
+        <param name="DWAPlannerROS/global_frame_id" value="$(arg odom_frame_id)"/>
+        <remap from="cmd_vel" to="navigation_velocity_smoother/raw_cmd_vel"/>
+        <remap from="odom" to="$(arg odom_topic)"/>
+        <remap from="scan" to="$(arg laser_topic)"/>
+    </node>
+</launch>
