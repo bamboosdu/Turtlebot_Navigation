@@ -22,6 +22,9 @@
   
     <node args="$(arg map_file)" name="map_server" pkg="map_server" type="map_server"/>
       
+    <!-- turtlebot bringup -->
+    
+    <include file="$(find turtlebot_bringup)/launch/minimal.launch"/>
   
     <!-- AMCL -->
       
@@ -58,7 +61,9 @@
     <!-- Move base -->
       
   
-    <arg default="$(find turtlebot_navigation)/param/$(arg laser_type)_costmap_params.yaml" name="custom_param_file"/>
+     <arg default="$(find turtlebot_navigation)/param/costmap_common_params.yaml" name="custom_param_file"/>
+
+
       
   
     <include file="$(find turtlebot_navigation)/launch/includes/rplidar_move_base.launch.xml">
@@ -68,4 +73,24 @@
           
   
     </include>
+   
+    
+      <!--rviz in navigation -->
+      
+     
+      <include file="$(find turtlebot_rviz_launchers)/launch/view_navigation.launch"/>
+      
+
+      <!--multi navigation point to run -->
+
+     
+
+     <node pkg="multinav" name="multinav"  type="nav.py"  output="screen"/>
+
+     <!--using kinect to get rgbd image -->
+      
+     
+      <include file="$(find guardar_imagenes)/launch/get_image.launch"/>
+
+
 </launch>
